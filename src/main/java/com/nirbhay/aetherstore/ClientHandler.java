@@ -3,6 +3,9 @@ package com.nirbhay.aetherstore;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
+import java.util.Arrays;
+
+import protocol.RESPParser;
 
 public class ClientHandler implements Runnable {
     
@@ -17,33 +20,45 @@ public class ClientHandler implements Runnable {
 	public void run() {
 	  try {
 		 InputStream input = clientSocket.getInputStream();
-         byte[] buffer = new byte[1024];
-         String sb = "";
         
+         RESPParser parser = new RESPParser(input);
          
-		 // This blocks until the client sends data
-        while(true) {
-     	   int bytesRead = input.read(buffer);
-     	   
-            if (bytesRead != -1) {
-                String message = new String(buffer, 0, bytesRead);
-                System.out.println("Received raw data: " + message);
-                sb += message;
-                
-            }else if(bytesRead==-1)  break;
-        }
-        
-        System.out.println("Client disconnected. the message Recived is "+ sb);
-        
-         
+         while(true) 
+         {
+        	 try 
+        	 {
+        		 String[] command = parser.parseCommand();
+            	 System.out.println("Parsed command : " + Arrays.toString(command) );   
+        	 } catch (Exception e) {
+             	if(e.getMessage().equals("Disconnected")) 
+             	{
+             		System.out.println("Client Disconnected");
+             		break;
+             	}
+            		
+            	else System.out.println("Protocol Error :" + e.getMessage());
+    		}
+        	 
+         }
        
-        clientSocket.close();
+		} catch (IOException e1) {
+			
+			e1.printStackTrace();
 		} 
          
-         catch (IOException e) {
-        	System.err.println("Server exception: " + e.getMessage());
+         
+	  finally
+	  {
+		try 
+		{
+			clientSocket.close();
+		}  
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}
+	  }
 		
 	}
 
