@@ -3,9 +3,12 @@ package com.nirbhay.aetherstore;
 
 
 import java.io.IOException;
-import java.io.InputStream;
+
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AetherStoreServer {
     public static void main(String[] args) {
@@ -14,7 +17,7 @@ public class AetherStoreServer {
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Ready to accept connections. Run 'telnet localhost 6379' in your terminal.");
-            
+            ExecutorService threadPool = Executors.newFixedThreadPool(10);
             // This blocks until a client connects
             while(true) 
             {
@@ -22,7 +25,7 @@ public class AetherStoreServer {
                 System.out.println("Client connected from: " + clientSocket.getRemoteSocketAddress());
                 
                 ClientHandler  handler = new ClientHandler(clientSocket);
-                new Thread(handler).start();
+                threadPool.execute(handler);
                
             	
             }

@@ -6,17 +6,17 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     
-	private Socket serverSocket ;
+	private Socket clientSocket ;
 	
-	ClientHandler(Socket serverSocket)
+	ClientHandler(Socket clientSocket)
 	{
-	     this.serverSocket = serverSocket;	
+	     this.clientSocket = clientSocket;	
 	}
 	
 	@Override
 	public void run() {
 	  try {
-		 InputStream input = serverSocket.getInputStream();
+		 InputStream input = clientSocket.getInputStream();
          byte[] buffer = new byte[1024];
          String sb = "";
         
@@ -34,10 +34,10 @@ public class ClientHandler implements Runnable {
         }
         
         System.out.println("Client disconnected. the message Recived is "+ sb);
-        System.out.println("Wating for another client....");
+        
          
        
-			serverSocket.close();
+        clientSocket.close();
 		} 
          
          catch (IOException e) {
