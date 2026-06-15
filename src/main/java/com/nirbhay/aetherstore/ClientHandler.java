@@ -2,14 +2,17 @@ package com.nirbhay.aetherstore;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 
+import command.CommandEngine;
 import protocol.RESPParser;
 
 public class ClientHandler implements Runnable {
     
 	private Socket clientSocket ;
+	
 	
 	ClientHandler(Socket clientSocket)
 	{
@@ -19,6 +22,7 @@ public class ClientHandler implements Runnable {
 	@Override
 	public void run() {
 	  try {
+		 OutputStream output = clientSocket.getOutputStream();
 		 InputStream input = clientSocket.getInputStream();
         
          RESPParser parser = new RESPParser(input);
@@ -28,6 +32,11 @@ public class ClientHandler implements Runnable {
         	 try 
         	 {
         		 String[] command = parser.parseCommand();
+        		 
+        		 String  response = CommandEngine.execute(command);
+        		 byte[] responseByte = response.getBytes();
+        		 output.write(responseByte);
+        		 output.flush();
             	 System.out.println("Parsed command : " + Arrays.toString(command) );   
         	 } catch (Exception e) {
              	if(e.getMessage().equals("Disconnected")) 
@@ -36,7 +45,7 @@ public class ClientHandler implements Runnable {
              		break;
              	}
             		
-            	else System.out.println("Protocol Error :" + e.getMessage());
+            	else System.out.println("Protocol Error :" + e.getMessage() + " Retry");
     		}
         	 
          }
