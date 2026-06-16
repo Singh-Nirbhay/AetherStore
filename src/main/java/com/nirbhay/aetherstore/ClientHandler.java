@@ -6,8 +6,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 
-import command.CommandEngine;
-import protocol.RESPParser;
+import com.nirbhay.aetherstore.command.CommandEngine;
+import com.nirbhay.aetherstore.protocol.RESPParser;
 
 public class ClientHandler implements Runnable {
     

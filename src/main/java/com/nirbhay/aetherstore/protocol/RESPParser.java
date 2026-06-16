@@ -1,4 +1,4 @@
-package protocol;
+package com.nirbhay.aetherstore.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
