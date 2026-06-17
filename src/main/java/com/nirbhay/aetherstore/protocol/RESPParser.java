@@ -21,8 +21,8 @@ public class RESPParser
     		 {
     			 int next = input.read();
     			 if(next == 10) break;
-    			 if(next==-1) break;
     			 data.append((char)b);
+    			 if(next==-1) break;
     			 data.append((char)next);
     		 }
     		 else data.append((char) b);

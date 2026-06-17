@@ -61,6 +61,21 @@ public class CommandEngine
 		    	int byteLen = bulkString.getBytes(StandardCharsets.UTF_8).length;	
 		        return ("$"+byteLen+"\r\n"+bulkString+"\r\n");
 	        	
+	      case "EXPIRE":
+	    	  if(command.length != 3) 
+	        		return "-ERR wrong number of arguments for 'EXPIRE' command\r\n";
+	    	  
+	    	  int seconds;
+	    	  try 
+	    	  {
+	    		seconds = Integer.parseInt(command[2]);  
+	    	  }catch(NumberFormatException e) {
+	    		  return "-ERR value is not an integer or out of range\r\n";
+	    	  }
+	    	  Boolean success = db.expire(command[1], seconds);
+	    	  if(success) 
+	    		  return ":1\r\n";
+	    	  return ":0\r\n";
 	        
 	        default :
 	        	return "-ERR unknown command\r\n";

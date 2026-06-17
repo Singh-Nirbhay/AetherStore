@@ -24,7 +24,10 @@ public class ClientHandler implements Runnable {
 	  try {
 		 OutputStream output = clientSocket.getOutputStream();
 		 InputStream input = clientSocket.getInputStream();
-        
+         String successMsg = "+Connection Successfull\r\n";
+         byte[] successMsgByte = successMsg.getBytes();
+         output.write(successMsgByte);
+         output.flush();
          RESPParser parser = new RESPParser(input);
          
          while(true) 
