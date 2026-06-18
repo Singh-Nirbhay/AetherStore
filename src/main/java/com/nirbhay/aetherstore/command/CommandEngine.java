@@ -1,8 +1,10 @@
 package com.nirbhay.aetherstore.command;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import com.nirbhay.aetherstore.storage.StorageEngine;
+import com.nirbhay.aetherstore.storage.TemporalNode;
 
 public class CommandEngine 
 {
@@ -76,6 +78,42 @@ public class CommandEngine
 	    	  if(success) 
 	    		  return ":1\r\n";
 	    	  return ":0\r\n";
+	    	  
+	      case "GETAT" :
+	    	  if(command.length != 3)
+	    		  return "-ERR wrong number of arguments for 'GETAT' command\r\n";
+	    	  try 
+	    	  {
+	    		long targetTime = Long.parseLong(command[2]);
+	    		String valAtTime = db.getAt(command[1], targetTime);
+	    		if(valAtTime== null) return "$-1\r\n";
+	    		int len = valAtTime.getBytes(StandardCharsets.UTF_8).length;
+	    		return "$"+len+"\r\n"+valAtTime+"\r\n";
+	    	  }
+	    	  catch (NumberFormatException e) {
+	    	        return "-ERR value is not a valid timestamp\r\n";
+	    	    }
+	    	  
+	      case "TIMELINE":
+	    	  if (command.length != 2) {
+	    	        return "-ERR wrong number of arguments for 'TIMELINE' command\r\n";
+	    	    }
+	    	  List<TemporalNode>  history = db.timeline(command[1]);
+	    	  if(history.isEmpty()) return "*0\r\n";
+	    	  
+	    	  StringBuilder sb = new StringBuilder("*" + history.size() + "\r\n");
+	    	  for(TemporalNode node:history) 
+	    	  {
+	    		String record = node.getValue() + " @ " + node.getTimestamp() ;
+	    		int recordLen = record.getBytes(StandardCharsets.UTF_8).length;
+	    		sb
+	    		.append("$")
+	    		.append(recordLen)
+	    		.append("\r\n")
+	    		.append(record)
+	    		.append("\r\n");
+	    	  }
+	    	  return sb.toString();
 	        
 	        default :
 	        	return "-ERR unknown command\r\n";
