@@ -233,28 +233,28 @@ Response
 ```text
 AetherStore
 │
-├── bin/                                  # Compiled .class files
+├── bin/                                             # Compiled .class files
 │
 ├── src/
 │   └── com/
 │       └── nirbhay/
 │           └── aetherstore/
 │               │
-│               ├── Server.java           # Entry point, ServerSocket, Fixed Thread Pool
-│               ├── ClientHandler.java    # Runnable thread, Network I/O, RESP Parsing
+│               ├── AetherStoreServer.java           # Entry point, ServerSocket, Fixed Thread Pool
+│               ├── ClientHandler.java               # Runnable thread, Network I/O, RESP Parsing
 │               │
 │               ├── command/
-│               │   └── CommandEngine.java      # Command routing, RESP array formatting
+│               │   └── CommandEngine.java           # Command routing, RESP array formatting
 │               │
 │               └── storage/
-│                   ├── StorageEngine.java      # Singleton vault, ConcurrentHashMap, TTL Janitor
-│                   ├── TemporalRingBuffer.java # MVCC bounded LinkedList (max size 10)
-│                   └── TemporalNode.java       # Immutable historical state and epoch timestamp
+│                   ├── StorageEngine.java           # Singleton vault, ConcurrentHashMap, TTL Janitor
+│                   ├── TemporalRingBuffer.java      # MVCC bounded LinkedList (max size 10)
+│                   └── TemporalNode.java            # Immutable historical state and epoch timestamp
 │
-├── docs/                                 # (Optional) For your architecture diagrams
+├── docs/                               
 │   └── architecture.png
 │
-└── README.md                             # Project documentation
+└── README.md                                        # Project documentation
 ```
 
 ---
